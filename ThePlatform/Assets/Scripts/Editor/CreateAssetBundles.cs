@@ -12,8 +12,6 @@ public class CreateAssetBundles : MonoBehaviour
     {
         string assetBundleDirectory = "Assets/AssetBundles";
 
-        // CopyFolderStructure( Path.Combine("Assets", EditorAssetsResourceManager.AssetResourcesDirectory), assetBundleDirectory);
-        
         if(!Directory.Exists(assetBundleDirectory))
         {
             Directory.CreateDirectory(assetBundleDirectory);
@@ -46,26 +44,6 @@ public class CreateAssetBundles : MonoBehaviour
         {
             string targetDir = Path.Combine(target, Path.GetFileName(directory));
             CopyAll(directory, targetDir);
-        }
-    }
-    
-    private static void CopyFolderStructure(string sourcePath, string destinationPath)
-    {
-        // Get the subdirectories for the specified directory.
-        DirectoryInfo dir = new DirectoryInfo(sourcePath);
-        DirectoryInfo[] subdirs = dir.GetDirectories();
-
-        // If the destination directory doesn't exist, create it.
-        if (!Directory.Exists(destinationPath))
-        {
-            Directory.CreateDirectory(destinationPath);
-        }
-
-        // Copy the directory structure recursively.
-        foreach (DirectoryInfo subdir in subdirs)
-        {
-            string destPath = Path.Combine(destinationPath, subdir.Name);
-            CopyFolderStructure(subdir.FullName, destPath);
         }
     }
 }
