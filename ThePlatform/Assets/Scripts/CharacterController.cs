@@ -1,44 +1,41 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using GameEntities;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class CharacterController : MonoBehaviour
 {
-    // Dependencies
-    [SerializeField] private InputManager inputManager;
-    [SerializeField] private CharacterAnimator characterAnimator;
+    [Header("Dependencies")]
+    [SerializeField] private CharacterAnimator spriteAnimator;
+    [SerializeField] private Rigidbody2D rb;
     
-    [HideInInspector] private Rigidbody2D _rigidbody2D;
+    [Header("Settings")]
     // Settings
-    [SerializeField] private float speed = 1f;
-
-    private void Awake()
+    public float moveSpeed = 200f;
+    
+    protected virtual void Start()
     {
-        _rigidbody2D = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
-    private void Start()
+    public void Move(Vector2 direction)
     {
-        inputManager.PlayerMovedFixed += OnPlayerMovedFixed;
-        inputManager.PlayerNotMovedFixed += OnPlayerNotMovedFixed;
-    }
+        var movement = direction.normalized * (moveSpeed * Time.deltaTime);
 
-    private void OnPlayerNotMovedFixed()
-    {
-        characterAnimator.Play(CharacterAnimator.Animation.Idle);
-
-        _rigidbody2D.velocity = Vector2.zero;
-    }
-
-    private void OnPlayerMovedFixed(Vector2 move)
-    {
-        _rigidbody2D.velocity = move * speed;
+        if(movement.x != 0)
+            spriteAnimator.Flipped = movement.x < 0;
         
-        characterAnimator.Play(CharacterAnimator.Animation.Walk);
+        rb.AddForce(movement, ForceMode2D.Impulse);
+    }
 
-        characterAnimator.Flipped = move.x < 0;
+    protected virtual void FixedUpdate()
+    {
+        if(rb.velocity.magnitude > 0.25f)
+            spriteAnimator.PlayAnimation(CharacterAnimator.Animation.Walk);
+        else
+            spriteAnimator.PlayAnimation(CharacterAnimator.Animation.Idle);
     }
 }
