@@ -5,11 +5,15 @@ using UnityEngine.UIElements;
 
 public class InputManager : MonoBehaviour
 {
+    // Events
+
     public event Action<Vector2> PlayerMovedFixed;
     public event Action PlayerNotMovedFixed;
 
     public event Action<Vector2> PlayerMoved;
     public event Action PlayerNotMoved;
+
+    // Private fields
 
     private InputActions _inputActions;
 
